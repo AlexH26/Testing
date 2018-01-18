@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>ACV - Atomic Catalog Viewer</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+	<link rel="stylesheet" type="text/css" href="ACV_v6.css">
+	<link rel="stylesheet" type="text/css" href="misc.css">
+	<!--===============================================================================================-->
+<!--===============================================================================================-->
+
+<!--===============================================================================================-->
+<!--	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">-->
+<!--===============================================================================================-->
+	<!--<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">-->
+<!--===============================================================================================-->
+	<!--<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">-->
+<!--===============================================================================================-->
+	<!--<link rel="stylesheet" type="text/css" href="vendor/perfect-scrollbar/perfect-scrollbar.css">-->
+<!--===============================================================================================-->
+	<!--<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">-->
+<!--===============================================================================================-->
+</head>
+<body id="projectGUI" style="background-color: #c2efef">
+	<!--  #1596ED"-->
+
+	<!--<div style="margin:50px">
+		<div>
+			<div style="border: solid black 1px;border-bottom:none;width:200px;height:20px;display:inline">Page 1</div>
+			<div style="border-bottom: solid black 1px;width:800px;display:inline"></div>
+		</div>
+		<div>
+			<table style="width:1000px;border: solid black 1px;border-top:none">
+				<tbody>
+					<tr>
+						<td>hello</td>
+						<td>hello</td>
+					</tr>
+					<tr>
+						<td>hello</td>
+						<td>hello</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>-->
+
+	<div style="margin:15px;padding:5px;border:solid black 1px;background-color:#eafcfc;border-radius:20px">
+		<div style="margin:15px;padding:5px;color:#7fa2ef">
+			<h1> Atomic Catalogue Portal (ACP)</h1>
+			<p> Version 1</p>
+		</div>
+		<!--<div style="margin:15px;padding:5px;color:#617cb7">
+			<p> The Atomic Catalog Portal (ACP) is a portal that provides access to Inmarsat's Atomic Catalog Service. This service is used to store the different components required to deploy services to the local domains in Inmarsat's SDMN architecture.</p>
+			<br>
+			<p>
+				The following entities are those that can be retrieved from the Atomic Catalog Service using this portal:
+			</p>
+			<br>
+			<ol>
+				<li>Atomic Types</li>
+				<li>Atomic Elements</li>
+				<li>Atomic Services(?)</li>
+			</ol>
+			<p>
+				These have all been previously uploaded to the Atomic Catalog Service.
+			</p>
+			<br>
+			<br>
+			<p>The ACV has two main functions for accessing the Atomic Catalog Service. The first of these is the UPLOAD function. This allows users of this portal to add additional components (those seen in the list above) to the Atomic Catalog Service. The Second function is the SEARCH feature. The purpose of this is provide the users with a 'window' into the catalog. </p>
+		</div>-->
+		<div style="margin:15px;padding:5px;border:solid black 1px;background-color:#c2efef;border-radius:20px">
+			<div style="margin:15px;color:#617cb7">
+				<h3>UPLOAD</h3>
+				<!--<br>
+				<p>This section of the ACP is dedicated to uploading new Atomic Types, Atomic Elements or Atomic Services(?) to the Atomic Catalog Service. In order to use this feature, please select one of the following three options. Each option links to one of the components that can be added. Note: only one can be added at one time.</p>
+				<br>
+				<p>Each option will provide a different set of requirements from the user in order to complete the upload. The instructions for an option will be given once it has been selected.</p>
+				<br>-->
+				<div style="padding-left:15px" class="dropdown" style='display:inline'>
+					<span style="padding:5px">Please Select: </span>
+					<div class="form-check form-check-inline">
+		  				<label class="form-check-label">
+		    				<input v-on="click: radioToggles('uploadTypes','uploadElements','','upload')" class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio1" value="option1"> Atomic Types
+		  				</label>
+					</div>
+					<div class="form-check form-check-inline">
+		  				<label class="form-check-label">
+		    				<input v-on="click: radioToggles('uploadElements','uploadTypes','atom','upload')" class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio2" value="option1"> Atomic Elements
+		  				</label>
+					</div>
+				</div>
+			</div>
+			<div id="uploadTypes" style="display: none;padding-left:15px">
+				<!--<p>
+					In order to upload an Atomic Type to the Atomic Catalog Service, please complete the following tasks:
+					<ol>
+						<li>Input the required name in the box below (NOTE: this will be the ID name within the catalog)</li>
+						<li>Use the Open File option to locate the corresponding blueprint file </li>
+					</ol>
+					Once these actions have been completed, please press the "Complete Upload" button to upload the Atomic Type to the catalog.
+				</p>-->
+				<span> Name:
+					<input v-model="uploadName" type="text">
+					<!--<button style="margin:5px" class="btn btn-primary">Validate</button>-->
+					<button v-on="click: Upload('atomT')" style="margin:5px" class="btn btn-primary">Upload</button>
+					<p v-bind="uploadedName">{{uploadedName}}</p>
+				</span>
+			</div>
+			<div id="uploadElements" style="display: none">
+				<!--<p>
+					In order to upload an Atomic Element, the Atomic Type it is based on MUST have already been uploaded into the catalog. If this has not yet been conducted, please select the Atomic Types option above and complete that upload before attempting to upload the Atomic Element.
+					<br>
+					In order to upload an Atomic Element to the Atomic Catalog Service, please complete the following tasks:
+					<ol>
+						<li>Use the dropdown box below to select the required Atomic Type from the available options; </li>
+						<li>Complete the table with the reuqired capabilities of the new Atomic Elements</li>
+						<li>Use the Open File option to locate the corresponding blueprint file </li>
+					</ol>
+					Once these actions have been completed, please press the "Complete Upload" button to upload the Atomic Type to the catalog.
+					<br>
+					Note: If the chosen Atomic Type in the dropdown box currently registers no Atomic Elements in the Atomic Catalog Service, the user will be required to specify the required inputs. This will then become the default for all future Atomic Elements for that Atomic Type.
+				</p>-->
+				<div v-show="failUploadTypes" style="display: block">
+					There are no Atomic Types currently stored in this catalog!
+				</div>
+				<div v-show="!failUploadTypes">
+					<div style="padding:5px" class="dropdown" style='display:inline'>
+						<span style="padding:5px">Atomic Type: </span>
+						<button style="margin:5px"
+						class="btn btn-primary dropdown-toggle"
+						type="button" id="dropdownMenu2"
+						data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false">
+						{{dropdownUpload}}
+						</button>
+						<div v-if="render" class="dropdown-menu" aria-labelledby="dropdownMenu2">
+							<button v-repeat="atomTy: AtomicTypes[0]" v-on="click:toggle(atomTy[0],'upload')" class="dropdown-item" type="button"> {{atomTy[0]}} </button>
+						</div>
+					</div>
+					<div v-show="failUploadElements">
+						There are no Atomic Elements currently stored in this catalog for the selected Atomic Type!
+						<button v-on="click:increment('subtract','temp')" type="button">-</button>
+						<input v-model="tableRowCount" readonly>
+						<button v-on="click:increment('add','temp')" type="button">+</button>
+						<table id="temp" class="table table-striped" style="overflow:scroll">
+							<thead>
+								<tr>
+									<th><a href="#">Field</a></th>
+									<th><a href="#">Input Data</a></th>
+								</tr>
+							</thead>
+							<tbody id="uploadElement">
+								<tr v-repeat="n:tableRowCount">
+									<td contenteditable="true"></td>
+									<td contenteditable="true"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div v-show="!failUploadElements">
+						<div>
+						  <span v-repeat="header: uploadInputs.length">{{header}} </span>
+							<span>hello after</span>
+						</div>
+						<div v-show="switch=='uploadE'" style="overflow:scroll;margin:10px;width:90%;border:solid black 1px">
+							<table id="uploadTable" class="table table-striped" style="overflow:scroll">
+								<thead>
+									<tr>
+										<th><a href="#">Field</a></th>
+										<th><a href="#">Input Data</a></th>
+									</tr>
+								</thead>
+								<tbody id="uploadElement">
+									<tr v-repeat="n:uploadInputs.length">
+										<td contenteditable="false">{{uploadInputs[n]}}</td>
+										<!--<td v-on="click:Validate('uploadTable')" contenteditable="true">{{data[n]}}</td>-->
+										<td contenteditable="true"></td>
+									</tr>
+								</tbody>
+							</table>
+							<button type="button" v-on="click:Validate('uploadTable','table')">validate</button>
+						</div>
+						<div id="validatedInputs" style="color:red"> &#10004 Field inputs complete </div>
+						<div style="color:green"> &#x2718 Blueprint file uploaded
+						</div>
+						<button v-on="click: quick('uploadElement')">Upload</button>
+					</div>
+				</div>
+			</div>
+			<!--<div>
+				<div>
+					<br>
+					Atomic Node Type File:
+					<input type="file" class="form-control" placeholder="Search for..." aria-label="Search for...">
+					Atomic Type File:
+					<input type="file" class="form-control" placeholder="Search for..." aria-label="Search for...">
+					Atomic Element File:
+					<input type="file" class="form-control" placeholder="Search for..." aria-label="Search for...">
+				</div>
+			</div>-->
+		</div>
+		<div style="margin:15px;padding:5px;border:solid black 1px;background-color:#c2efef;border-radius:20px">
+			<div style="margin:15px;color:#617cb7">
+				<!--#07075D"-->
+				<h3>SEARCH</h3>
+				<!--<br>
+				<p>
+					This section of the ACP is dedicated to sending search queries to the Atomic Catalog Service. The user can retrieve information on the currently stored Atomic Types, Atomic Elements and Atomic Services(?).
+				</p>
+				<br>
+				<p>
+					In order to use this feature please select one of the following three options. Each option links to one of the components that can be searched for. Note: only one can be added at one time.
+					<br>
+					Each option will provide a different set of requirements for the user in order to carry out the search. The instructions for an option will be given once it has been selected.
+				</p>-->
+				<div style="padding-left:15px" class="dropdown" style='display:inline'>
+					<span style="padding:5px">Please Select: </span>
+					<div class="form-check form-check-inline">
+		  				<label class="form-check-label">
+		    				<input v-on="click: radioToggles('getTypes','getElements','atomT','search')" class="form-check-input" type="radio" name="inlineRadioOptions2" id="inlineRadio2" value="option2"> Atomic Types
+		  				</label>
+					</div>
+					<div class="form-check form-check-inline">
+		  				<label class="form-check-label">
+		    				<input v-on="click: radioToggles('getElements','getTypes','atom','search')" class="form-check-input" type="radio" name="inlineRadioOptions2" id="inlineRadio2" value="option2"> Atomic Elements
+		  				</label>
+					</div>
+				</div>
+				<div id="getTypes" style="display: none">
+					<table v-if="allowTypes" class="table table-striped" style="overflow:scroll">
+						<thead>
+							<tr>
+								<th><a href="#">Atomic Type</a></th>
+								<th><a href="#">Number of Atomic Elements</a></th>
+								<th><a href="#">Latest Addition</a></th>
+								<th><a href="#">Actions</a></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-repeat="atomTy: AtomicTypes[1]">
+								<td v-repeat="column: atomTy">{{column}}</td>
+								<td>
+									<button v-on="click:removal('atomic type',atomTy[0],'null')" class="btn btn-danger btn-sm">Delete </button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div id="getElements" style="display: none">
+					<div v-show="failSearchTypes">
+						There are no Atomic Types currently stored in this catalog!
+					</div>
+					<div v-show="!failSearchTypes">
+						<div style="padding:5px" class="dropdown" style='display:none'>
+							<span style="padding:5px">Atomic Type: </span>
+							<button style="margin:5px"
+								class="btn btn-primary dropdown-toggle"
+								type="button" id="dropdownMenu2"
+								data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
+								{{dropdownSearch}}
+							</button>
+							<div v-if="render2" class="dropdown-menu" aria-labelledby="dropdownMenu2">
+								<button v-repeat="atomTy: AtomicTypes[1]" v-on="click: toggle(atomTy[0],'search')" class="dropdown-item" type="button"> {{atomTy[0]}} </button>
+							</div>
+						</div>
+						<div v-if="failSearchElements">
+							There are no Atomic Elements currently stored in this catalog for the selected Atomic Type!
+						</div>
+						<div v-if="count>0">
+							<div style="overflow:scroll;margin:10px;width:90%;border:solid black 1px">
+								<div>
+									<table v-show="allowElements" id="searchElementsTable" class="table table-striped" style="overflow:scroll">
+										<thead>
+											<tr>
+												<th v-repeat="header: searchHeaders"><a href="#">{{header}}</a></th>
+												<th>Options</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr v-repeat="element: AtomicTypes[1][searchIndex][3] | orderBy 'Manufacturer'" id={{element.Manufacturer}}_delete>
+												<td v-repeat="attrib: element">{{attrib}}</td>
+												<td>
+													<button class="btn btn-primary btn-sm" style="margin-right:10px">Edit</button>
+													<button v-on="click:removal('atomic element',AtomicTypes[1][searchIndex][0],element.Manufacturer)" class="btn btn-danger btn-sm">Delete </button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p style="margin-left: 200px;text-align:center;color:#617cb7">&#169 2018 Inmarsat plc. All rights reserved</p>
+		<pre style="color:#617cb7">{{$data | json}} </pre>
+
+		<!--<div class="limiter" style="padding:0px;margin:0px">
+					<div>
+						<div class="wrap-table100">
+							<div class="table100 ver3 m-b-110">
+								<div class="table100-head">
+									<table>
+										<thead>
+											<tr class="row100 head">
+												<th class="cell100 column1">Atomic Type</th>
+												<th class="cell100 column2">Number of Atomic Elements</th>
+												<th class="cell100 column3">Latest Addition</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+								<div class="table100-body js-pscroll">
+									<table>
+										<tbody>
+											<tr class="row100 body">
+												<td class="cell100 column1">Like a butterfly</td>
+												<td class="cell100 column2">Boxing</td>
+												<td class="cell100 column3">9:00 AM - 11:00 AM</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			<ul class="nav nav-tabs">
+		  <li class="nav-item">
+		    <a class="nav-link active" href="#">Active</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link" href="#">Link</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link" href="#">Link</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link disabled" href="#">Disabled</a>
+		  </li>
+		</ul>
+
+
+		<div class="container"><h2>Example tab 2 (using standard nav-tabs)</h2></div>
+
+	<div id="exTab2" class="container">
+		<ul class="nav nav-tabs">
+			<li class="active">
+	   			<a  href="#1" data-toggle="tab">Overview</a>
+			</li>
+			<li><a href="#2" data-toggle="tab">Without clearfix</a>
+			</li>
+			<li><a href="#3" data-toggle="tab">Solution</a>
+			</li>
+		</ul>
+
+				<div class="tab-content ">
+				  <div class="tab-pane active" id="1">
+	          <h3>Standard tab panel created on bootstrap using nav-tabs</h3>
+					</div>
+					<div class="tab-pane" id="2">
+	          <h3>Notice the gap between the content and tab after applying a background color</h3>
+					</div>
+	        <div class="tab-pane" id="3">
+	          <h3>add clearfix to tab-content (see the css)</h3>
+					</div>
+				</div>
+	  </div>
+
+
+		<ul class="nav nav-tabs">
+		  <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
+		  <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
+		  <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
+		</ul>
+		<div class="tab-content">
+		  <div id="home" class="tab-pane fade in active">
+		    <h3>HOME</h3>
+		    <p>Some content.</p>
+		  </div>
+		  <div id="menu1" class="tab-pane fade">
+		    <h3>Menu 1</h3>
+		    <p>Some content in menu 1.</p>
+		  </div>
+		  <div id="menu2" class="tab-pane fade">
+		    <h3>Menu 2</h3>
+		    <p>Some content in menu 2.</p>
+		  </div>
+		</div>-->
+	</div>
+
+
+
+<!--===========================================================================================-->
+	<script src="jquery-3.2.1.min.js"></script>
+	<script src="perfect-scrollbar.min.js"></script>
+	<script>
+		$('.js-pscroll').each(function(){
+			var ps = new PerfectScrollbar(this);
+
+			$(window).on('resize', function(){
+				ps.update();
+			})
+		});
+	</script>
+<!--============================================================================================-->
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" 	crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/0.11.10/vue.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<!--<script src="ACV_v4.js"></script>-->
+	<script src="t2.js"></script>
+</body>
+</html>
